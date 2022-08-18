@@ -3,6 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 from .models import Cat
+from django.contrib.auth.models import User
 # Create your views here.
 # this is just like our req inside of express
 def index(request):
@@ -25,6 +26,7 @@ class CatCreate(CreateView):
     def form_valid(self, form):
         #commit=False makes sure we don't save to the database
         self.object = form.save(commit=False)
+        self.object.user = self.request.user
         self.object.save()
         return HttpResponseRedirect('/cats')
 
@@ -43,3 +45,8 @@ class CatDelete(DeleteView):
     model = Cat
     success_url = '/cats'
     template_name = 'cats/cat_confirm_delete.html'
+
+def profile(request, username):
+    user = User.objects.get(username=username)
+    cats = Cat.objects.filter(user=user)
+    return render(request, 'profile.html', {'username': username, 'cats': cats})

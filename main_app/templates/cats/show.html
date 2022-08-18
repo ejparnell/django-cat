@@ -1,18 +1,12 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html>
 
-<head>
-    <title>catcollector</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}" />
-</head>
+{% block content %}
 
-<body>
-    <h1>catcollector</h1>
-    <hr />
     <p>Name: {{cat.name}}</p>
     <p>Age: {{cat.age}}</p>
-    <footer>All Rights Reserved, catcollector 2018</footer>
-</body>
 
-</html>
+    <a href="{% url 'cat_update' cat.id %}">Update Cat</a>
+    <a href="{% url 'cat_delete' cat.id %}">Delete Cat</a>
+
+{% endblock %}

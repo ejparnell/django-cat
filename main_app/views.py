@@ -50,3 +50,4 @@ def profile(request, username):
     user = User.objects.get(username=username)
     cats = Cat.objects.filter(user=user)
     return render(request, 'profile.html', {'username': username, 'cats': cats})
+

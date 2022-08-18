@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<p>Name: {{cattoy.name}}</p>
+<p>Color: {{cattoy.color}}</p>
+
+<a href="{% url 'cattoys_update' cattoy.id %}">Update Cat toy</a>
+<a href="{% url 'cattoys_delete' cattoy.id %}">Delete Cat toy</a>
+
+{% endblock %}

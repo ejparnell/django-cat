@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
-from .models import Cat
+from .models import Cat, CatToy
 from django.contrib.auth.models import User
 # Create your views here.
 # this is just like our req inside of express
@@ -51,3 +51,38 @@ def profile(request, username):
     cats = Cat.objects.filter(user=user)
     return render(request, 'profile.html', {'username': username, 'cats': cats})
 
+def cattoys_index(request):
+    cattoys = CatToy.objects.all()
+    return render(request, 'cattoys/index.html', { 'cattoys': cattoys })
+
+def cattoy_show(request, cattoy_id):
+    cattoy = CatToy.objects.get(id=cattoy_id)
+    return render(request, 'cattoys/show.html', { 'cattoy': cattoy })
+
+class CatToyCreate(CreateView):
+    model = CatToy
+    fields = '__all__'
+    success_url = '/cattoys'
+    template_name = 'cattoys/cattoy_form.html'
+
+    def form_valid(self, form):
+        #commit=False makes sure we don't save to the database
+        self.object = form.save(commit=False)
+        self.object.save()
+        return HttpResponseRedirect('/cattoys')
+
+class CatToyUpdate(UpdateView):
+    model = CatToy
+    fields = '__all__'
+    template_name = 'cattoys/cattoy_form.html'
+
+    def form_valid(self, form):
+        #commit=False makes sure we don't save to the database
+        self.object = form.save(commit=False)
+        self.object.save()
+        return HttpResponseRedirect('/cattoys/' + str(self.object.pk))
+
+class CatToyDelete(DeleteView):
+    model = CatToy
+    success_url = '/cattoys'
+    template_name = 'cattoys/cattoy_confirm_delete.html'
